@@ -1,0 +1,31 @@
+{
+  "name": "aayanshinfocom",
+  "version": "1.0.0",
+  "description": "Chatbot backend for a wholesale networking-equipment catalog",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anshdtri-hub/business-chatbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/anshdtri-hub/business-chatbot/issues"
+  },
+  "homepage": "https://github.com/anshdtri-hub/business-chatbot#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.20.0",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.10.1"
+  }
+}
