@@ -8,6 +8,18 @@ const app = express();
 app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
+const rateLimit = require('express-rate-limit');
+
+app.set('trust proxy', 1);
+
+const chatLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 4 ,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many messages. Please wait a minute and try again.' }
+});
+app.use('/chat', chatLimiter);
 
 // Set up Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
