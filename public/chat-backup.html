@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ayansh Infocom Assistant</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .chat {
+      width: 420px;
+      height: 600px;
+      background: #1e293b;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .header {
+      padding: 16px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+    }
+    .messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    .bot { background: #334155; align-self: flex-start; }
+    .user { background: #2563eb; align-self: flex-end; }
+    .input-row {
+      display: flex;
+      padding: 12px;
+      gap: 8px;
+      background: #0f172a;
+    }
+    .input-row input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    .input-row button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat">
+    <div class="header">Ayansh Infocom Assistant</div>
+    <div class="messages" id="messages">
+      <div class="msg bot">Hello! Ask me about our routers, cables and networking products.</div>
+    </div>
+    <div class="input-row">
+      <input type="text" id="input" placeholder="Type your question..." />
+      <button id="send">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const messages = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+
+    function addMessage(text, who) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + who;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      input.value = '';
+      const thinking = addMessage('Typing...', 'bot');
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        thinking.textContent = data.reply || data.error || 'Something went wrong.';
+      } catch (err) {
+        thinking.textContent = 'Could not reach the server.';
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script>
+</body>
+</html>

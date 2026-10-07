@@ -5,6 +5,7 @@ const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
+app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
@@ -36,6 +37,14 @@ app.get('/', (req, res) => {
 app.get('/test-products', async (req, res) => {
   try {
     const products = await Product.find().limit(3);
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await Product.find().select('-__v').lean();
     res.json(products);
   } catch (err) {
     res.status(500).json({ error: err.message });
